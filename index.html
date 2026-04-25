@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japan 2026: Indigo & Clay Master Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --indigo-dye: #1e3a5f;
+            --sakura: #fce4ec;
+            --washi: #fdfbf7;
+            --sumi: #2d3748;
+            --vermilion: #e53e3e;
+            --gold: #d4af37;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--washi);
+            color: var(--sumi);
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .serif { font-family: 'Cormorant Garamond', serif; }
+
+        .hero-section {
+            background: linear-gradient(rgba(30, 58, 95, 0.6), rgba(30, 58, 95, 0.8)), 
+                        url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to top, var(--washi), transparent);
+        }
+
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(253, 251, 247, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: var(--vermilion);
+            margin: 1rem auto 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        }
+
+        .countdown-pill {
+            background: white;
+            border-left: 3px solid var(--indigo-dye);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .countdown-pill:hover {
+            background: var(--sakura);
+            border-left-color: var(--vermilion);
+        }
+
+        .page { display: none; opacity: 0; transition: opacity 0.5s ease; }
+        .page.active { display: block; opacity: 1; }
+
+        .nav-link { 
+            cursor: pointer; 
+            position: relative; 
+            padding-bottom: 4px; 
+            letter-spacing: 0.1em;
+            transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--vermilion);
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+            left: 0;
+        }
+        .nav-link.active { color: var(--indigo-dye); }
+
+        .timeline-line {
+            border-left: 1px solid var(--indigo-dye);
+            margin-left: 20px;
+            padding-left: 30px;
+        }
+        .timeline-marker {
+            position: absolute;
+            left: -35px;
+            width: 12px;
+            height: 12px;
+            background: var(--washi);
+            border: 2px solid var(--indigo-dye);
+            border-radius: 50%;
+            top: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .section-title { font-size: 2rem; }
+            .hero-section h1 { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky-nav">
+        <div class="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 bg-red-600 rounded-full"></div>
+                <span class="text-xl serif italic tracking-widest text-indigo-900">Japan '26</span>
+            </div>
+            <div class="flex space-x-8 text-xs font-bold uppercase tracking-widest text-gray-500">
+                <div onclick="showPage('home')" id="link-home" class="nav-link active">Home</div>
+                <div onclick="showPage('route')" id="link-route" class="nav-link">Timeline</div>
+                <div onclick="showPage('lodging')" id="link-lodging" class="nav-link">Lodging</div>
+                <div onclick="showPage('workshops')" id="link-workshops" class="nav-link">Workshops</div>
+                <div onclick="showPage('logistics')" id="link-logistics" class="nav-link">Logistics</div>
+                <div onclick="showPage('budget')" id="link-budget" class="nav-link">Budget</div>
+                <a href="map.html" class="nav-link" style="text-decoration: none;">Artisan Map</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE: HOME (DASHBOARD) -->
+    <div id="page-home" class="page active">
+        <!-- Hero -->
+        <header class="hero-section">
+            <div class="z-10">
+                <p class="text-sm uppercase tracking-[0.5em] mb-4 text-white/80">Donald & Ceci</p>
+                <h1 class="text-6xl md:text-8xl mb-6 font-thin italic">Indigo & Clay</h1>
+                <p class="text-xl md:text-2xl font-light italic max-w-xl mx-auto text-white/90 serif">
+                    A journey through the ancient kilns, denim streets, and neon dreams of Japan.
+                </p>
+            </div>
+        </header>
+
+        <main class="max-w-6xl mx-auto px-6 py-16">
+            
+            <!-- Summary -->
+            <section class="mb-24 text-center max-w-3xl mx-auto">
+                <h2 class="section-title serif italic">The Journey</h2>
+                <p class="text-lg leading-relaxed text-gray-600 mb-8 serif">
+                    Your 21-day odyssey begins with Donald's solo exploration of Tokyo's western districts, setting the stage for Ceci's arrival on May 2nd. Together, you will traverse the country—from the sacred peak of Mt. Fuji to the artisan heart of Kyoto, the spiritual deer parks of Nara, and the vibrant streets of Osaka.
+                </p>
+                <p class="text-lg leading-relaxed text-gray-600 serif">
+                    This is not just a vacation; it is a pilgrimage to the "Holy Grail" of denim in Kojima and the ancient pottery wheels of Kyoto, ending with a restorative soak in the volcanic waters of Hakone.
+                </p>
+            </section>
+
+            <!-- History & Context -->
+            <section class="mb-24">
+                <h2 class="section-title serif italic">History & Soul</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card p-8 text-center hover:bg-indigo-50 transition duration-500">
+                        <i class="fas fa-torii-gate text-3xl text-red-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-3 serif text-indigo-900">Kyoto</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">For over 1,000 years, the Imperial Capital. It survived WWII bombing to preserve 2,000 temples. It is the spiritual home of the tea ceremony and pottery.</p>
+                    </div>
+                    <div class="card p-8 text-center hover:bg-indigo-50 transition duration-500">
+                        <i class="fas fa-city text-3xl text-indigo-900 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-3 serif text-indigo-900">Tokyo (Edo)</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">Once a small fishing village named Edo, it became the seat of the Shogun in 1603. Today, it is a seamless blend of neon futurism and quiet, hidden shrines.</p>
+                    </div>
+                    <div class="card p-8 text-center hover:bg-indigo-50 transition duration-500">
+                        <i class="fas fa-mountain text-3xl text-blue-900 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-3 serif text-indigo-900">Hakone</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">A historic checkpoint on the old Tokaido road connecting Tokyo to Kyoto. Known for its 'onsen' (hot springs) fueled by the active volcano, Owakudani.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Booking Timers -->
+            <section class="mb-24 bg-white p-12 rounded-lg border border-gray-100 shadow-sm">
+                <div class="flex items-center justify-between mb-10 border-b pb-4">
+                    <h2 class="text-3xl serif italic text-indigo-900">Booking Command Center</h2>
+                    <span class="px-3 py-1 bg-red-50 text-red-600 text-[10px] uppercase font-bold tracking-widest rounded-full border border-red-100">Live Status</span>
+                </div>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <!-- Ghibli Park -->
+                    <a href="https://ghibli-park.jp/en/ticket/" target="_blank" class="countdown-pill p-6">
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-2">Ghibli Park</p>
+                        <p class="text-xs font-bold mb-4">Feb 10 @ 14:00</p>
+                        <div class="flex space-x-2 text-indigo-900 font-bold font-mono text-sm">
+                            <span id="gp-days">--</span>d <span id="gp-hours">--</span>h <span id="gp-mins">--</span>m
+                        </div>
+                    </a>
+                    <!-- Museum -->
+                    <a href="https://www.ghibli-museum.jp/en/tickets/" target="_blank" class="countdown-pill p-6" style="border-left-color: #ed8936;">
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-2">Ghibli Museum</p>
+                        <p class="text-xs font-bold mb-4">Apr 10 @ 10:00</p>
+                        <div class="flex space-x-2 text-indigo-900 font-bold font-mono text-sm">
+                            <span id="gm-days">--</span>d <span id="gm-hours">--</span>h <span id="gm-mins">--</span>m
+                        </div>
+                    </a>
+                    <!-- Pokemon -->
+                    <a href="https://www.pokemoncenter-online.com/cafe/en/" target="_blank" class="countdown-pill p-6" style="border-left-color: #4299e1;">
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-2">Pokemon Cafe</p>
+                        <p class="text-xs font-bold mb-4">Apr 1 @ 18:00</p>
+                        <div class="flex space-x-2 text-indigo-900 font-bold font-mono text-sm">
+                            <span id="pc-days">--</span>d <span id="pc-hours">--</span>h <span id="pc-mins">--</span>m
+                        </div>
+                    </a>
+                    <!-- Nintendo -->
+                    <a href="https://museum.nintendo.com/en/index.html" target="_blank" class="countdown-pill p-6" style="border-left-color: #718096;">
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-2">Nintendo</p>
+                        <p class="text-xs font-bold mb-4">Lottery Entry</p>
+                        <div class="text-red-500 font-bold text-xs uppercase animate-pulse">Open Feb/Mar</div>
+                    </a>
+                </div>
+                
+                <h3 class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4 mt-8">Confirmed Tickets</h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="border border-gray-100 p-4 rounded bg-gray-50 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-indigo-900">teamLab Planets Tokyo</p>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest">May 3 @ 18:30 • Toyosu</p>
+                        </div>
+                        <i class="fas fa-check-circle text-blue-500"></i>
+                    </div>
+                    <div class="border border-gray-100 p-4 rounded bg-gray-50 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-indigo-900">Kirby Cafe Tokyo</p>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest">Apr 30 @ 12:20 • KT604301796K</p>
+                        </div>
+                        <i class="fas fa-check-circle text-pink-500"></i>
+                    </div>
+                    <div class="border border-gray-100 p-4 rounded bg-gray-50 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-indigo-900">Nintendo Museum</p>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest">May 8 @ 15:30 • M0715001385</p>
+                        </div>
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                    <div class="border border-gray-100 p-4 rounded bg-gray-50 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-indigo-900">teamLab Botanical Garden</p>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest">May 13 @ 19:30 • Osaka</p>
+                        </div>
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                    <div class="border border-gray-100 p-4 rounded bg-gray-50 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-indigo-900">teamLab Biovortex Kyoto</p>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest">Confirmed • GAA881736</p>
+                        </div>
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Traveler's Wisdom -->
+            <section class="grid md:grid-cols-2 gap-12 mb-12">
+                <div class="bg-indigo-900 text-white p-10 rounded-sm shadow-xl">
+                    <h3 class="text-2xl serif italic mb-6">The Way of the Traveler</h3>
+                    <ul class="space-y-6">
+                        <li class="flex items-start">
+                            <span class="text-gold text-xl mr-4">01.</span>
+                            <div>
+                                <p class="font-bold text-sm uppercase tracking-widest mb-1">Silence is Golden</p>
+                                <p class="text-xs text-indigo-200 leading-relaxed">On trains and buses, silence is respected. Avoid phone calls and keep voices low.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-gold text-xl mr-4">02.</span>
+                            <div>
+                                <p class="font-bold text-sm uppercase tracking-widest mb-1">The Cash Economy</p>
+                                <p class="text-xs text-indigo-200 leading-relaxed">Many artisan workshops and old temples only accept cash. Carry ¥20,000 (~$130) at all times.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-gold text-xl mr-4">03.</span>
+                            <div>
+                                <p class="font-bold text-sm uppercase tracking-widest mb-1">Tax-Free Shopping</p>
+                                <p class="text-xs text-indigo-200 leading-relaxed">Carry your passport. Purchases over ¥5,500 are tax-free (10% off). Consumables will be sealed.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="p-8 border border-gray-200 bg-white">
+                    <h3 class="text-2xl serif italic mb-6 text-indigo-900">Essential Resources</h3>
+                    <div class="space-y-4">
+                        <a href="https://vjw-lp.digital.go.jp/en/" target="_blank" class="block p-4 bg-gray-50 hover:bg-gray-100 transition flex justify-between items-center group">
+                            <span class="font-bold text-sm text-gray-700">Visit Japan Web (Customs)</span>
+                            <i class="fas fa-arrow-right text-gray-300 group-hover:text-indigo-900 transition"></i>
+                        </a>
+                        <a href="https://smart-ex.jp/en/" target="_blank" class="block p-4 bg-gray-50 hover:bg-gray-100 transition flex justify-between items-center group">
+                            <span class="font-bold text-sm text-gray-700">SmartEX (Shinkansen)</span>
+                            <i class="fas fa-arrow-right text-gray-300 group-hover:text-indigo-900 transition"></i>
+                        </a>
+                        <a href="https://www.google.com/maps" target="_blank" class="block p-4 bg-gray-50 hover:bg-gray-100 transition flex justify-between items-center group">
+                            <span class="font-bold text-sm text-gray-700">Google Maps (Offline)</span>
+                            <i class="fas fa-arrow-right text-gray-300 group-hover:text-indigo-900 transition"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- PAGE: TIMELINE (ROUTE) -->
+    <div id="page-route" class="page">
+        <main class="max-w-4xl mx-auto px-6 py-20">
+            <h2 class="section-title serif italic">The Daily Path</h2>
+            
+            <div class="relative">
+                <!-- Apr 27-May 2 -->
+                <div class="mb-16 relative">
+                    <div class="timeline-line">
+                        <div class="timeline-marker"></div>
+                        <span class="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-2 block">April 27 — May 2</span>
+                        <h3 class="text-2xl serif font-bold mb-4">Tokyo: Solo Beginnings</h3>
+                        <div class="card p-8">
+                            <p class="text-xs font-bold uppercase text-gray-400 mb-2 text-indigo-900">Donald Arrives: Apr 27 @ 09:10 (NRT)</p>
+                            <div class="space-y-4 mb-6">
+                                <div class="bg-indigo-50 border border-indigo-100 p-3 rounded text-xs">
+                                    <p class="font-bold text-indigo-900 uppercase tracking-widest mb-1">Night 1: Apr 27</p>
+                                    <p class="text-gray-600">Capsule Hotel Suzumoriya</p>
+                                    <p class="text-[10px] text-gray-400 mt-1">Sumida-ku Kotobashi 4-6-5</p>
+                                </div>
+                                <div class="bg-gray-50 border border-gray-200 p-3 rounded text-xs">
+                                    <p class="font-bold text-gray-500 uppercase tracking-widest mb-1">Nights 2-5: Apr 28 — May 2</p>
+                                    <p class="text-gray-600">Grand Hostel LDK Tokyo ($113.62)</p>
+                                </div>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <ul class="text-sm space-y-3 text-gray-600">
+                                    <li><i class="fas fa-check text-indigo-300 mr-2"></i>Shibuya Crossing</li>
+                                    <li><i class="fas fa-check text-indigo-300 mr-2"></i>Harajuku (Takeshita-dori)</li>
+                                    <li class="font-bold text-indigo-900"><i class="fas fa-utensils text-pink-400 mr-2"></i>Apr 30 @ 12:20: Kirby Cafe</li>
+                                    <li><i class="fas fa-check text-indigo-300 mr-2"></i>Meiji Shrine</li>
+                                </ul>
+                                <div class="bg-indigo-50 p-4 text-xs text-indigo-900 leading-relaxed italic">
+                                    "Explore the neon west side. April 29 is a holiday; expect crowds at Meiji Shrine."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- May 2-4 -->
+                <div class="mb-16 relative">
+                    <div class="timeline-line">
+                        <div class="timeline-marker" style="border-color: var(--vermilion);"></div>
+                        <span class="text-xs font-bold text-red-600 uppercase tracking-widest mb-2 block">May 2 — May 4</span>
+                        <h3 class="text-2xl serif font-bold mb-4 text-indigo-900">Tokyo: The Team Unites</h3>
+                        <div class="card p-8 border-l-4 border-red-500">
+                            <p class="text-xs font-bold uppercase text-gray-400 mb-2">Stay: Andon Ryokan ($356.41)</p>
+                            <div class="bg-red-50 border border-red-100 p-3 rounded mb-6 text-xs text-red-800 flex justify-between">
+                                <span><strong>In:</strong> 3:00 PM | <strong>Out:</strong> 10:00 AM</span>
+                                <span><strong>Payment Due:</strong> April 25th</span>
+                            </div>
+                            <p class="text-xs text-red-600 font-bold mb-6 italic">May 2: Ceci Arrives @ 13:05 (NRT). Meetup at Andon.</p>
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="text-sm font-bold uppercase tracking-widest mb-3">Highlights</h4>
+                                    <ul class="text-sm space-y-3 text-gray-600">
+                                        <li>• Senso-ji Temple (Asakusa)</li>
+                                        <li>• Ghibli Museum (Mitaka)</li>
+                                        <li class="font-bold text-indigo-900"><i class="fas fa-ticket-alt mr-1"></i> May 3 @ 18:30: teamLab Planets</li>
+                                        <li>• Akihabara Shopping</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-indigo-50 p-4 text-xs">
+                                    <p class="font-bold text-indigo-900 mb-1">Workshop Focus</p>
+                                    <p class="text-indigo-800">Uzumako Pottery (Wheel Throwing) & Takahashi Kobo (Woodblock).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- May 4-5 -->
+                <div class="mb-16 relative">
+                    <div class="timeline-line">
+                        <div class="timeline-marker"></div>
+                        <span class="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-2 block">May 4 — May 5</span>
+                        <h3 class="text-2xl serif font-bold mb-4">Mount Fuji Reflection</h3>
+                        <div class="card p-8">
+                            <p class="text-xs font-bold uppercase text-gray-400 mb-2">Stay: Hostel Michifusa-ya ($117.55)</p>
+                            <div class="bg-gray-50 border border-gray-200 p-3 rounded mb-6 text-xs text-gray-600 flex justify-between">
+                                <span><strong>In:</strong> 3:00 PM | <strong>Out:</strong> 10:00 AM</span>
+                                <span><strong>Payment Due:</strong> April 26th</span>
+                            </div>
+                            <ul class="text-sm space-y-3 text-gray-600">
+                                <li>• Lake Kawaguchiko Shoreline</li>
+                                <li>• Mt. Fuji Panoramic Ropeway</li>
+                                <li>• Chureito Pagoda</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- May 5-10 -->
+                <div class="mb-16 relative">
+                    <div class="timeline-line">
+                        <div class="timeline-marker"></div>
+                        <span class="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-2 block">May 5 — May 10</span>
+                        <h3 class="text-2xl serif font-bold mb-4">Kyoto & The Denim Quest</h3>
+                        <div class="card p-8">
+                            <p class="text-xs font-bold uppercase text-gray-400 mb-2">Stay: Henn na Hotel Premier Kyoto Gojo ($409.65)</p>
+                            <div class="bg-gray-50 border border-gray-200 p-3 rounded mb-6 text-xs text-gray-600 flex justify-between">
+                                <span><strong>In:</strong> 3:00 PM</span>
+                                <span><strong>Payment:</strong> Paid</span>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-10">
+                                <div>
+                                    <h4 class="text-xs font-bold uppercase tracking-widest mb-3 border-b pb-1">Ancient Kyoto</h4>
+                                    <ul class="text-xs space-y-2 text-gray-600">
+                                        <li>• Arashiyama Bamboo</li>
+                                        <li>• Nijo Castle</li>
+                                        <li>• Kiyomizu-dera</li>
+                                        <li>• Pontocho Alley</li>
+                                        <li class="font-bold text-indigo-900"><i class="fas fa-ticket-alt mr-1"></i> May 8: Nintendo Museum @ 15:30</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-indigo-900 text-white p-6 rounded-sm shadow-md">
+                                    <h4 class="serif italic text-xl mb-2">Denim Day Trip</h4>
+                                    <p class="text-xs opacity-80 mb-4">Okayama & Kojima Jeans Street</p>
+                                    <ul class="text-xs space-y-2">
+                                        <li>• Betty Smith Workshop</li>
+                                        <li>• Momotaro Flagship</li>
+                                    </ul>
+                                    <p class="text-[10px] font-bold opacity-60 uppercase border-t border-white/20 pt-4">Transit: Kyoto → Okayama → Kojima (1.5h)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- May 10-13 -->
+                <div class="mb-16 relative">
+                    <div class="timeline-line">
+                        <div class="timeline-marker"></div>
+                        <span class="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-2 block">May 10 — May 13</span>
+                        <h3 class="text-2xl serif font-bold mb-4">Nara Spirits</h3>
+                        <div class="card p-8">
+                            <p class="text-xs font-bold uppercase text-gray-400 mb-2">Stay: Onyado Nono Nara ($265.65)</p>
+                            <div class="bg-gray-50 border border-gray-200 p-3 rounded mb-6 text-xs text-gray-600 flex justify-between">
+                                <span><strong>In:</strong> 3:00 PM</span>
+                                <span><strong>Payment Due:</strong> May 6th</span>
+                            </div>
+                            <div class="flex flex-col space-y-3 text-sm text-gray-600">
+                                <span><i class="fas fa-leaf text-green-600 mr-2"></i>Todai-ji (Great Buddha)</span>
+                                <span><i class="fas fa-leaf text-green-600 mr-2"></i>Kasuga Taisha Lanterns</span>
+                                <span><i class="fas fa-hiking text-green-600 mr-2"></i>Yoshino Village Hike</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- May 13-15 -->
+                <div class="mb-16 relative">
+                    <div class="timeline-line">
+                        <div class="timeline-marker"></div>
+                        <span class="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-2 block">May 13 — May 15</span>
+                        <h3 class="text-2xl serif font-bold mb-4">Hakone Mist & Onsen</h3>
+                        <div class="card p-8 border-l-4 border-blue-400">
+                            <p class="text-xs font-bold uppercase text-gray-400 mb-2">Stay: Kappa Tengoku ($240.00 est.)</p>
+                            <div class="bg-blue-50 border border-blue-100 p-3 rounded mb-6 text-xs text-blue-800 flex justify-between">
+                                <span><strong>In:</strong> 3:00 PM | <strong>Out:</strong> 10:00 AM</span>
+                                <span><strong>Address:</strong> Yumoto 777, Hakone</span>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <ul class="text-sm space-y-3 text-gray-600">
+                                    <li>• Hakone Open-Air Museum</li>
+                                    <li>• Lake Ashi Pirate Ship</li>
+                                    <li>• Owakudani Volcanic Valley</li>
+                                    <li>• Forest Adventure Hakone</li>
+                                </ul>
+                                <div class="bg-indigo-900 text-white p-6 rounded-sm shadow-md">
+                                    <h4 class="serif italic text-xl mb-2">Travel Note</h4>
+                                    <p class="text-xs opacity-80">Skipping Osaka stay to maximize Onsen time in Hakone. teamLab Botanical Garden remains an optional stopover on the way from Nara.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- May 16-18 -->
+                <div class="relative">
+                    <div class="timeline-line border-l-0">
+                        <div class="timeline-marker bg-red-600 border-red-600"></div>
+                        <span class="text-xs font-bold text-red-600 uppercase tracking-widest mb-2 block">May 16 — May 18</span>
+                        <h3 class="text-2xl serif font-bold mb-4">Tokyo Finale</h3>
+                        <div class="card p-8 bg-gray-50 border border-gray-200">
+                            <p class="text-xs font-bold uppercase text-gray-400 mb-2">Stay: Remm Roppongi ($272.97)</p>
+                            <div class="bg-gray-50 border border-gray-200 p-3 rounded mb-6 text-xs text-gray-600 flex justify-between">
+                                <span><strong>In:</strong> 2:00 PM | <strong>Out:</strong> 12:00 PM</span>
+                                <span><strong>Payment:</strong> Not specified</span>
+                            </div>
+                            <ul class="text-sm space-y-2 text-gray-600 mb-4">
+                                <li>• Ghibli Park (Nagakute) Day Trip</li>
+                                <li>• Final Shopping (Ginza/Shibuya)</li>
+                            </ul>
+                            <p class="text-sm font-bold text-indigo-900 border-t pt-4">Departure: May 18 Afternoon</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- PAGE: LODGING -->
+    <div id="page-lodging" class="page">
+        <main class="max-w-5xl mx-auto px-6 py-20">
+            <h2 class="section-title serif italic">Lodging Directory</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Tokyo: Grand Hostel -->
+                <div class="card p-8 border-l-4 border-indigo-900">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-1">Apr 28 - May 1</span>
+                            <h3 class="text-xl serif font-bold text-indigo-900">Grand Hostel LDK Tokyo</h3>
+                        </div>
+                        <span class="font-mono font-bold text-sm bg-gray-100 px-2 py-1 rounded">$113.62</span>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600 mb-6">
+                        <p><i class="fas fa-map-marker-alt text-indigo-300 w-5"></i> 2-chome-17-1 Ikebukuro, Toshima City</p>
+                        <p><i class="fas fa-door-open text-indigo-300 w-5"></i> Check-in: 15:00 | Check-out: 10:00</p>
+                        <p><i class="fas fa-bed text-indigo-300 w-5"></i> Standard Twin Room</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-100 flex justify-between items-center">
+                        <span class="text-xs font-bold text-gray-500">Status: <span class="text-green-600">Confirmed</span></span>
+                        <a href="#" class="text-xs font-bold uppercase tracking-widest text-indigo-900 border-b border-indigo-900 pb-1">View Map</a>
+                    </div>
+                </div>
+
+                <!-- Tokyo: Andon -->
+                <div class="card p-8 border-l-4 border-red-600">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-1">May 1 - May 4</span>
+                            <h3 class="text-xl serif font-bold text-indigo-900">Andon Ryokan</h3>
+                        </div>
+                        <span class="font-mono font-bold text-sm bg-gray-100 px-2 py-1 rounded">$356.41</span>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600 mb-6">
+                        <p><i class="fas fa-map-marker-alt text-red-300 w-5"></i> 2-chome-34-10 Nihonzutsumi, Taito City</p>
+                        <p><i class="fas fa-door-open text-red-300 w-5"></i> Check-in: 15:00 | Check-out: 10:00</p>
+                        <p><i class="fas fa-bed text-red-300 w-5"></i> Traditional Tatami Room</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-100 flex justify-between items-center">
+                        <span class="text-xs font-bold text-gray-500">Payment Due: <span class="text-red-600">Apr 25</span></span>
+                        <a href="#" class="text-xs font-bold uppercase tracking-widest text-indigo-900 border-b border-indigo-900 pb-1">View Map</a>
+                    </div>
+                </div>
+
+                <!-- Kyoto: Henn na -->
+                <div class="card p-8 border-l-4 border-indigo-900">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-1">May 5 - May 10</span>
+                            <h3 class="text-xl serif font-bold text-indigo-900">Henn na Hotel Kyoto Gojo</h3>
+                        </div>
+                        <span class="font-mono font-bold text-sm bg-gray-100 px-2 py-1 rounded">$409.65</span>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600 mb-6">
+                        <p><i class="fas fa-map-marker-alt text-indigo-300 w-5"></i> 160-4, Gojo-dori, Shimogyo Ward</p>
+                        <p><i class="fas fa-door-open text-indigo-300 w-5"></i> Check-in: 15:00 | Check-out: 11:00</p>
+                        <p><i class="fas fa-bed text-indigo-300 w-5"></i> Double Room</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-100 flex justify-between items-center">
+                        <span class="text-xs font-bold text-gray-500">Status: <span class="text-green-600">Paid</span></span>
+                        <a href="#" class="text-xs font-bold uppercase tracking-widest text-indigo-900 border-b border-indigo-900 pb-1">View Map</a>
+                    </div>
+                </div>
+
+                <!-- Hakone: Kappa Tengoku -->
+                <div class="card p-8 border-l-4 border-blue-600">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-1">May 13 - May 15</span>
+                            <h3 class="text-xl serif font-bold text-indigo-900">Kappa Tengoku</h3>
+                        </div>
+                        <span class="font-mono font-bold text-sm bg-gray-100 px-2 py-1 rounded">$255.00</span>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600 mb-6">
+                        <p><i class="fas fa-map-marker-alt text-blue-300 w-5"></i> Yumoto 777, Hakone</p>
+                        <p><i class="fas fa-door-open text-blue-300 w-5"></i> Check-in: 15:00 | Check-out: 10:00</p>
+                        <p><i class="fas fa-hot-tub text-blue-300 w-5"></i> Japanese-Style Room with Shared Bathroom</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-100 flex justify-between items-center">
+                        <span class="text-xs font-bold text-gray-500">Status: <span class="text-green-600">Confirmed</span></span>
+                        <a href="#" class="text-xs font-bold uppercase tracking-widest text-indigo-900 border-b border-indigo-900 pb-1">View Map</a>
+                    </div>
+                </div>
+
+                <!-- Tokyo: Hotaku HOTEL Akihabara -->
+                <div class="card p-8 border-l-4 border-indigo-900">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-1">May 15 - May 16</span>
+                            <h3 class="text-xl serif font-bold text-indigo-900">Hotaku HOTEL Akihabara</h3>
+                        </div>
+                        <span class="font-mono font-bold text-sm bg-gray-100 px-2 py-1 rounded">$90.00</span>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600 mb-6">
+                        <p><i class="fas fa-map-marker-alt text-indigo-300 w-5"></i> Akihabara, Tokyo</p>
+                        <p><i class="fas fa-door-open text-indigo-300 w-5"></i> Check-in: 15:00 | Check-out: 10:00</p>
+                        <p><i class="fas fa-bed text-indigo-300 w-5"></i> Standard Room</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-100 flex justify-between items-center">
+                        <span class="text-xs font-bold text-gray-500">Status: <span class="text-green-600">Confirmed</span></span>
+                        <a href="#" class="text-xs font-bold uppercase tracking-widest text-indigo-900 border-b border-indigo-900 pb-1">View Map</a>
+                    </div>
+                </div>
+
+                <!-- Tokyo: remm Roppongi -->
+                <div class="card p-8 border-l-4 border-indigo-900">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-1">May 16 - May 18</span>
+                            <h3 class="text-xl serif font-bold text-indigo-900">remm Roppongi</h3>
+                        </div>
+                        <span class="font-mono font-bold text-sm bg-gray-100 px-2 py-1 rounded">$262.00</span>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600 mb-6">
+                        <p><i class="fas fa-map-marker-alt text-indigo-300 w-5"></i> Roppongi, Tokyo</p>
+                        <p><i class="fas fa-door-open text-indigo-300 w-5"></i> Check-in: 14:00 | Check-out: 12:00</p>
+                        <p><i class="fas fa-bed text-indigo-300 w-5"></i> Double Room</p>
+                    </div>
+                    <div class="pt-4 border-t border-gray-100 flex justify-between items-center">
+                        <span class="text-xs font-bold text-gray-500">Status: <span class="text-green-600">Confirmed</span></span>
+                        <a href="#" class="text-xs font-bold uppercase tracking-widest text-indigo-900 border-b border-indigo-900 pb-1">View Map</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- PAGE: WORKSHOPS -->
+    <div id="page-workshops" class="page">
+        <main class="max-w-6xl mx-auto px-6 py-20">
+            <h2 class="section-title serif italic">Artisan Experiences</h2>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Pottery -->
+                <div class="card">
+                    <div class="h-48 bg-gray-200" style="background-image: url('https://images.unsplash.com/photo-1565193566173-7a641c761637?auto=format&fit=crop&w=800&q=80'); background-size: cover;"></div>
+                    <div class="p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-900 mb-2 block">Tokyo (Minato)</span>
+                        <h3 class="text-2xl serif font-bold mb-4">Uzumako Ceramic Art School</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed mb-6">A foreigner-friendly studio specializing in the electric wheel. Create your own tea bowls or sake cups. International shipping available.</p>
+                        <a href="https://www.uzumakotougei.com/en/" target="_blank" class="text-xs font-bold uppercase tracking-widest text-indigo-900 border-b border-indigo-900 pb-1">Book Session</a>
+                    </div>
+                </div>
+
+                <!-- Denim -->
+                <div class="card">
+                    <div class="h-48 bg-gray-200" style="background-image: url('https://images.unsplash.com/photo-1542272617-08f086303294?auto=format&fit=crop&w=800&q=80'); background-size: cover;"></div>
+                    <div class="p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-900 mb-2 block">Okayama (Kojima)</span>
+                        <h3 class="text-2xl serif font-bold mb-4">Betty Smith Jeans Museum</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed mb-6">The "Holy Grail" of denim. Select raw fabric, choose custom rivets and buttons, and use vintage machines to create your pair.</p>
+                        <a href="https://betty.co.jp/village/make/" target="_blank" class="text-xs font-bold uppercase tracking-widest text-indigo-900 border-b border-indigo-900 pb-1">Reserve Slot</a>
+                    </div>
+                </div>
+
+                <!-- Food Models -->
+                <div class="card">
+                    <div class="h-48 bg-gray-200" style="background-image: url('https://images.unsplash.com/photo-1558985250-27a406d64cb3?auto=format&fit=crop&w=800&q=80'); background-size: cover;"></div>
+                    <div class="p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-900 mb-2 block">Osaka</span>
+                        <h3 class="text-2xl serif font-bold mb-4">Iwasaki Food Models</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed mb-6">Craft hyper-realistic 'Sampuru' (plastic food). Use warm wax to shape tempura and lettuce in water. A uniquely Japanese art.</p>
+                        <a href="https://www.ganso-sample.com/en/" target="_blank" class="text-xs font-bold uppercase tracking-widest text-indigo-900 border-b border-indigo-900 pb-1">Learn More</a>
+                    </div>
+                </div>
+
+                <!-- Kyoto Pottery -->
+                <div class="card">
+                    <div class="h-48 bg-gray-200" style="background-image: url('https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=800&q=80'); background-size: cover;"></div>
+                    <div class="p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-900 mb-2 block">Kyoto</span>
+                        <h3 class="text-2xl serif font-bold mb-4">Zuikogama Kiyomizu-yaki</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed mb-6">Located near the famous Kiyomizu temple. Experience 250 years of tradition using local clay and ash glazes.</p>
+                        <a href="https://www.taiken-kiyomizu.com/en/" target="_blank" class="text-xs font-bold uppercase tracking-widest text-indigo-900 border-b border-indigo-900 pb-1">View Studio</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- PAGE: LOGISTICS -->
+    <div id="page-logistics" class="page">
+        <main class="max-w-5xl mx-auto px-6 py-20">
+            <h2 class="section-title serif italic">Logistics & Transit</h2>
+            
+            <div class="mb-16">
+                <h3 class="text-xl font-bold uppercase tracking-widest text-indigo-900 mb-6">Flight Itinerary</h3>
+                
+                <div class="space-y-4">
+                    <!-- Donald's Trip (Expandable) -->
+                    <details class="group bg-white rounded-lg border border-gray-100 overflow-hidden shadow-sm" open>
+                        <summary class="list-none cursor-pointer p-6 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-indigo-900">Donald's Journey: Lisbon ⇄ Tokyo</h4>
+                                    <p class="text-[10px] text-gray-500 uppercase tracking-widest">Apr 26 - May 18 • SWISS & ANA • €1,093.99</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-down text-gray-300 group-open:rotate-180 transition-transform"></i>
+                        </summary>
+                        <div class="p-6 border-t border-gray-50 bg-indigo-50/20">
+                            <!-- Outbound -->
+                            <div class="mb-8">
+                                <h5 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex items-center">
+                                    <i class="fas fa-plane-departure mr-2"></i> Outbound: Apr 26-27
+                                </h5>
+                                <div class="space-y-6 pl-2 border-l border-gray-100 ml-1">
+                                    <div class="relative">
+                                        <div class="absolute -left-[9px] top-1 w-4 h-4 bg-white border border-indigo-200 rounded-full flex items-center justify-center">
+                                            <div class="w-1.5 h-1.5 bg-indigo-400 rounded-full"></div>
+                                        </div>
+                                        <p class="text-xs font-bold text-indigo-900">Lisbon (LIS) → Zurich (ZRH)</p>
+                                        <p class="text-[10px] text-gray-600">LX2083 • Dep: 05:55 • SWISS</p>
+                                    </div>
+                                    <div class="relative py-2 text-[10px] italic text-gray-400">
+                                        Layover in Zurich: ~7h 10m
+                                    </div>
+                                    <div class="relative">
+                                        <div class="absolute -left-[9px] top-1 w-4 h-4 bg-white border border-indigo-200 rounded-full flex items-center justify-center">
+                                            <div class="w-1.5 h-1.5 bg-indigo-400 rounded-full"></div>
+                                        </div>
+                                        <p class="text-xs font-bold text-indigo-900">Zurich (ZRH) → Tokyo Narita (NRT)</p>
+                                        <p class="text-[10px] text-gray-600">LX160 • Dep: 13:05 • Arr: 09:10 (+1)</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Inbound -->
+                            <div>
+                                <h5 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex items-center">
+                                    <i class="fas fa-plane-arrival mr-2"></i> Return: May 18
+                                </h5>
+                                <div class="space-y-6 pl-2 border-l border-gray-100 ml-1">
+                                    <div class="relative">
+                                        <div class="absolute -left-[9px] top-1 w-4 h-4 bg-white border border-indigo-200 rounded-full flex items-center justify-center">
+                                            <div class="w-1.5 h-1.5 bg-indigo-600 rounded-full"></div>
+                                        </div>
+                                        <p class="text-xs font-bold text-indigo-900">Tokyo Haneda (HND) → Istanbul (IST)</p>
+                                        <p class="text-[10px] text-gray-600">NH219 • Dep: 08:25 • ANA</p>
+                                    </div>
+                                    <div class="relative py-2 text-[10px] italic text-gray-400">
+                                        Layover in Istanbul: ~4h 45m
+                                    </div>
+                                    <div class="relative">
+                                        <div class="absolute -left-[9px] top-1 w-4 h-4 bg-white border border-indigo-200 rounded-full flex items-center justify-center">
+                                            <div class="w-1.5 h-1.5 bg-indigo-600 rounded-full"></div>
+                                        </div>
+                                        <p class="text-xs font-bold text-indigo-900">Istanbul (IST) → Lisbon (LIS)</p>
+                                        <p class="text-[10px] text-gray-600">TK1779 • Dep: 20:20 • Arr: 23:20</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Ceci's Trip (Expandable) -->
+                    <details class="group bg-white rounded-lg border border-gray-100 overflow-hidden shadow-sm">
+                        <summary class="list-none cursor-pointer p-6 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center text-red-600">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-indigo-900">Ceci's Journey: Paris ⇄ Tokyo</h4>
+                                    <p class="text-[10px] text-gray-500 uppercase tracking-widest">May 1 — May 18 • Finnair • 19h 20m Outbound</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-down text-gray-300 group-open:rotate-180 transition-transform"></i>
+                        </summary>
+                        <div class="p-6 border-t border-gray-50 bg-red-50/10">
+                            <div class="grid md:grid-cols-2 gap-12">
+                                <!-- Outbound -->
+                                <div>
+                                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex items-center">
+                                        <i class="fas fa-plane-departure mr-2"></i> Outbound: May 1
+                                    </h5>
+                                    <div class="space-y-6 pl-2 border-l border-gray-100 ml-1">
+                                        <div class="relative">
+                                            <div class="absolute -left-[9px] top-1 w-4 h-4 bg-white border border-red-200 rounded-full flex items-center justify-center">
+                                                <div class="w-1.5 h-1.5 bg-red-400 rounded-full"></div>
+                                            </div>
+                                            <p class="text-xs font-bold text-indigo-900">Paris (CDG) → Helsinki (HEL)</p>
+                                            <p class="text-[10px] text-gray-600">AY1572 • Dep: 10:45 • Terminal 2B</p>
+                                        </div>
+                                        <div class="relative py-2 text-[10px] italic text-gray-400">
+                                            Layover in Helsinki: 3h 5m
+                                        </div>
+                                        <div class="relative">
+                                            <div class="absolute -left-[9px] top-1 w-4 h-4 bg-white border border-red-200 rounded-full flex items-center justify-center">
+                                                <div class="w-1.5 h-1.5 bg-red-400 rounded-full"></div>
+                                            </div>
+                                            <p class="text-xs font-bold text-indigo-900">Helsinki (HEL) → Tokyo (NRT)</p>
+                                            <p class="text-[10px] text-gray-600">AY073 • Dep: 17:45 • Arr: 13:05 (+1)</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Inbound -->
+                                <div>
+                                    <h5 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex items-center">
+                                        <i class="fas fa-plane-arrival mr-2"></i> Return: May 18
+                                    </h5>
+                                    <div class="space-y-6 pl-2 border-l border-gray-100 ml-1">
+                                        <div class="relative">
+                                            <div class="absolute -left-[9px] top-1 w-4 h-4 bg-white border border-red-200 rounded-full flex items-center justify-center">
+                                                <div class="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
+                                            </div>
+                                            <p class="text-xs font-bold text-indigo-900">Tokyo (NRT/HND) → Paris (CDG)</p>
+                                            <p class="text-[10px] text-gray-600">Finnair • Returning May 18th</p>
+                                            <p class="text-[10px] text-gray-400 italic text-xs mt-1">"Homebound after 18 days of artisan discovery."</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="mb-16">
+                <h3 class="text-xl font-bold uppercase tracking-widest text-indigo-900 mb-6">The Move List</h3>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 divide-y divide-gray-100">
+                    <!-- Move 0 -->
+                    <div class="p-6 flex flex-col md:flex-row justify-between items-center bg-indigo-50/30">
+                        <div class="mb-2 md:mb-0 w-full md:w-1/3">
+                            <span class="text-[10px] font-bold text-indigo-400 uppercase block mb-1">April 27 • 09:10 AM</span>
+                            <span class="font-bold text-indigo-900">Arrival @ Narita (NRT)</span>
+                        </div>
+                        <div class="text-sm text-gray-600 w-full md:w-1/3">Narita Express (N'EX) to Tokyo Station</div>
+                        <div class="font-mono text-sm font-bold w-full md:w-1/3 text-right">¥3,070</div>
+                    </div>
+                    <!-- Move 1 -->
+                    <div class="p-6 flex flex-col md:flex-row justify-between items-center">
+                        <div class="mb-2 md:mb-0 w-full md:w-1/3">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase block mb-1">May 1</span>
+                            <span class="font-bold text-indigo-900">To Andon Ryokan</span>
+                        </div>
+                        <div class="text-sm text-gray-600 w-full md:w-1/3">Subway: Tozai → Hibiya (Minowa Stn)</div>
+                        <div class="font-mono text-sm font-bold w-full md:w-1/3 text-right">$8</div>
+                    </div>
+                    <!-- Move 2 -->
+                    <div class="p-6 flex flex-col md:flex-row justify-between items-center">
+                        <div class="mb-2 md:mb-0 w-full md:w-1/3">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase block mb-1">May 4 • 09:30 AM</span>
+                            <span class="font-bold text-indigo-900">To Kawaguchiko</span>
+                        </div>
+                        <div class="text-sm text-gray-600 w-full md:w-1/3">
+                            <strong>Fuji Excursion #3</strong> (Direct from Shinjuku)
+                            <div class="text-xs text-indigo-600 mt-1"><i class="fas fa-ticket-alt mr-1"></i> Booked via Klook</div>
+                        </div>
+                        <div class="font-mono text-sm font-bold w-full md:w-1/3 text-right">$80</div>
+                    </div>
+                    <!-- Move 3 -->
+                    <div class="p-6 flex flex-col md:flex-row justify-between items-center">
+                        <div class="mb-2 md:mb-0 w-full md:w-1/3">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase block mb-1">May 5 • 11:15 AM</span>
+                            <span class="font-bold text-indigo-900">To Kyoto (Henn na)</span>
+                        </div>
+                        <div class="text-sm text-gray-600 w-full md:w-1/3">
+                            Bus to Mishima → <strong>Shinkansen Hikari 507</strong>
+                            <div class="text-xs text-indigo-600 mt-1"><i class="fas fa-ticket-alt mr-1"></i> Booked via Klook</div>
+                        </div>
+                        <div class="font-mono text-sm font-bold w-full md:w-1/3 text-right">$370</div>
+                    </div>
+                    <!-- Move 4 -->
+                    <div class="p-6 flex flex-col md:flex-row justify-between items-center">
+                        <div class="mb-2 md:mb-0 w-full md:w-1/3">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase block mb-1">May 10</span>
+                            <span class="font-bold text-indigo-900">To Nara (Onyado)</span>
+                        </div>
+                        <div class="text-sm text-gray-600 w-full md:w-1/3">JR Nara Line (Miyakoji Rapid)</div>
+                        <div class="font-mono text-sm font-bold w-full md:w-1/3 text-right">$12</div>
+                    </div>
+                    <!-- Move 5 -->
+                    <div class="p-6 flex flex-col md:flex-row justify-between items-center">
+                        <div class="mb-2 md:mb-0 w-full md:w-1/3">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase block mb-1">May 13</span>
+                            <span class="font-bold text-indigo-900">To Hakone (Kappa Tengoku)</span>
+                        </div>
+                        <div class="text-sm text-gray-600 w-full md:w-1/3">JR Nara → Kyoto → Shinkansen (Odawara)</div>
+                        <div class="font-mono text-sm font-bold w-full md:w-1/3 text-right">$122</div>
+                    </div>
+                    <!-- Move 7 -->
+                    <div class="p-6 flex flex-col md:flex-row justify-between items-center">
+                        <div class="mb-2 md:mb-0 w-full md:w-1/3">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase block mb-1">May 16</span>
+                            <span class="font-bold text-indigo-900">To Roppongi (Remm)</span>
+                        </div>
+                        <div class="text-sm text-gray-600 w-full md:w-1/3">Romancecar → Oedo Line</div>
+                        <div class="font-mono text-sm font-bold w-full md:w-1/3 text-right">$45</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- PAGE: BUDGET -->
+    <div id="page-budget" class="page">
+        <main class="max-w-4xl mx-auto px-6 py-20">
+            <h2 class="section-title serif italic">Estimated Costs</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="card p-8 border-t-4 border-indigo-900">
+                    <h3 class="text-lg font-bold uppercase tracking-widest mb-6 text-gray-400">Accommodations</h3>
+                    <ul class="space-y-4 text-sm text-gray-600">
+                        <li class="flex justify-between"><span>Suzumoriya Capsule</span> <span class="font-mono">$25.00</span></li>
+                        <li class="flex justify-between"><span>Grand Hostel LDK</span> <span class="font-mono">$113.62</span></li>
+                        <li class="flex justify-between"><span>Andon Ryokan</span> <span class="font-mono">$356.41</span></li>
+                        <li class="flex justify-between"><span>Hostel Michifusa-ya</span> <span class="font-mono">$117.55</span></li>
+                        <li class="flex justify-between"><span>Henn na Kyoto</span> <span class="font-mono">$409.65</span></li>
+                        <li class="flex justify-between"><span>Onyado Nono Nara</span> <span class="font-mono">$265.65</span></li>
+                        <li class="flex justify-between"><span>Kappa Tengoku (Hakone)</span> <span class="font-mono">$255.00</span></li>
+                        <li class="flex justify-between"><span>Hotaku HOTEL Akihabara</span> <span class="font-mono">$90.00</span></li>
+                        <li class="flex justify-between"><span>remm Roppongi</span> <span class="font-mono">$262.00</span></li>
+                        <li class="flex justify-between border-t pt-4 font-bold text-indigo-900"><span>TOTAL</span> <span class="font-mono">$1,894.88</span></li>
+                    </ul>
+                </div>
+
+                <div class="card p-8 border-t-4 border-red-500">
+                    <h3 class="text-lg font-bold uppercase tracking-widest mb-6 text-gray-400">Sightseeing & Experiences</h3>
+                    <ul class="space-y-4 text-sm text-gray-600">
+                        <li class="flex justify-between"><span>teamLab Planets Tokyo</span> <span class="font-mono">~$52.00</span></li>
+                        <li class="flex justify-between"><span>Kirby Cafe Tokyo (Solo)</span> <span class="font-mono">~$30.00</span></li>
+                        <li class="flex justify-between"><span>Nintendo Museum (x2)</span> <span class="font-mono">¥6,600 (~$43)</span></li>
+                        <li class="flex justify-between"><span>teamLab Botanical Osaka</span> <span class="font-mono">$26.36</span></li>
+                        <li class="flex justify-between"><span>teamLab Biovortex Kyoto</span> <span class="font-mono">¥5,600 (~$36)</span></li>
+                        <li class="flex justify-between"><span>Ghibli Park (Est.)</span> <span class="font-mono">$45.00</span></li>
+                        <li class="flex justify-between"><span>Ghibli Museum (Est.)</span> <span class="font-mono">$20.00</span></li>
+                        <li class="flex justify-between border-t pt-4 font-bold text-red-600"><span>SUBTOTAL</span> <span>~$252.36</span></li>
+                    </ul>
+                    <p class="text-[10px] text-gray-400 mt-4 italic">* Prices based on current exchange rates.</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="card p-8 border-t-4 border-green-600">
+                    <h3 class="text-lg font-bold uppercase tracking-widest mb-6 text-gray-400">Transport Estimate</h3>
+                    <ul class="space-y-4 text-sm text-gray-600">
+                        <li class="flex justify-between"><span>Fuji Excursion</span> <span class="font-mono">$160</span></li>
+                        <li class="flex justify-between"><span>Shinkansen Legs</span> <span class="font-mono">$370</span></li>
+                        <li class="flex justify-between"><span>Local Metro/Bus</span> <span class="font-mono">$50</span></li>
+                        <li class="flex justify-between"><span>Airport Transfers</span> <span class="font-mono">$70</span></li>
+                        <li class="flex justify-between border-t pt-4 font-bold text-green-700"><span>TOTAL (2 Pax)</span> <span>~$650.00</span></li>
+                    </ul>
+                    <div class="mt-6 bg-green-50 p-4 text-xs text-green-800 rounded">
+                        <strong>Luggage Tip:</strong> Budget ~$45 for Takkyubin forwarding (3 transfers x $15).
+                    </div>
+                </div>
+                <div class="p-8 flex items-center justify-center border-2 border-dashed border-gray-100 rounded-lg">
+                    <p class="text-xs text-gray-400 italic">More categories can be added via AI scan...</p>
+                </div>
+            </div>
+            
+            <!-- AI Receipt & Ticket Upload -->
+            <div class="card p-8 border-t-4 border-gray-900 mb-12">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold uppercase tracking-widest text-gray-400">AI Receipt & Ticket Upload</h3>
+                    <span class="px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] uppercase font-bold tracking-widest rounded-full">Powered by AI</span>
+                </div>
+                <div class="border-2 border-dashed border-gray-300 p-10 text-center rounded-lg cursor-pointer hover:bg-gray-50 transition" onclick="document.getElementById('receipt-upload').click()">
+                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                    <p class="text-lg serif font-bold text-indigo-900 mb-2">Upload a Receipt or Ticket</p>
+                    <p class="text-sm text-gray-500">AI will automatically extract the amount, date, and categorize your spending or train times.</p>
+                    <input type="file" id="receipt-upload" class="hidden" accept="image/*,application/pdf" onchange="handleReceiptUpload(event)">
+                </div>
+                <div id="ai-loading" class="hidden mt-6 text-center">
+                    <i class="fas fa-circle-notch fa-spin text-2xl text-indigo-600 mb-2"></i>
+                    <p class="text-sm text-gray-600 font-mono">Analyzing document...</p>
+                </div>
+                <div id="receipt-results" class="mt-8 hidden">
+                    <h4 class="font-bold text-indigo-900 mb-4 uppercase tracking-widest text-xs border-b pb-2">Recent AI Uploads</h4>
+                    <ul id="expense-list" class="space-y-3"></ul>
+                </div>
+            </div>
+
+            <div class="bg-indigo-900 text-white p-12 text-center rounded-sm">
+                <p class="text-xs uppercase tracking-[0.2em] opacity-70 mb-4">Total Core Trip Cost (2 Adults)</p>
+                <h3 class="text-6xl serif font-bold">$<span id="total-cost">2,698</span> <span class="text-2xl opacity-50 font-sans">/ €2,510</span></h3>
+                <p class="text-xs italic opacity-60 mt-4">*Excludes Flights, Food & Shopping</p>
+            </div>
+        </main>
+    </div>
+
+    <footer class="bg-white border-t border-gray-100 py-16 text-center">
+        <p class="serif italic text-xl text-indigo-900 mb-2">Indigo & Clay</p>
+        <p class="text-[10px] uppercase tracking-widest text-gray-400">Japan 2026 • Donald & Ceci</p>
+    </footer>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById('link-' + pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        const bookingDates = {
+            gp: new Date("February 10, 2026 14:00:00 GMT+0900"),
+            gm: new Date("April 10, 2026 10:00:00 GMT+0900"),
+            pc: new Date("April 1, 2026 18:00:00 GMT+0900")
+        };
+
+        function updateCountdowns() {
+            const now = new Date().getTime();
+            
+            Object.keys(bookingDates).forEach(key => {
+                const targetTime = bookingDates[key].getTime();
+                const distance = targetTime - now;
+                
+                const days = Math.max(0, Math.floor(distance / (1000 * 60 * 60 * 24)));
+                const hours = Math.max(0, Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+                const minutes = Math.max(0, Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
+                
+                const daysEl = document.getElementById(key + "-days");
+                const hoursEl = document.getElementById(key + "-hours");
+                const minsEl = document.getElementById(key + "-mins");
+                
+                if(daysEl) daysEl.innerText = days;
+                if(hoursEl) hoursEl.innerText = hours;
+                if(minsEl) minsEl.innerText = minutes;
+            });
+        }
+
+        updateCountdowns();
+        setInterval(updateCountdowns, 60000);
+
+        // AI Receipt Upload Logic
+        let totalCost = 2698;
+        
+        function handleReceiptUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Show loading state
+            document.getElementById('ai-loading').classList.remove('hidden');
+            document.getElementById('receipt-results').classList.remove('hidden');
+
+            // Simulate AI extraction delay
+            setTimeout(() => {
+                document.getElementById('ai-loading').classList.add('hidden');
+                
+                // Simulate extracted data
+                const isTrain = Math.random() > 0.5;
+                const amount = isTrain ? Math.floor(Math.random() * 40) + 10 : Math.floor(Math.random() * 100) + 20;
+                const category = isTrain ? 'Transit' : 'Dining';
+                const merchant = isTrain ? 'JR East Ticket' : 'Local Izakaya';
+                const icon = isTrain ? 'fa-train text-green-500' : 'fa-utensils text-orange-500';
+                
+                // Update list
+                const list = document.getElementById('expense-list');
+                const li = document.createElement('li');
+                li.className = 'flex justify-between items-center p-3 bg-gray-50 rounded border border-gray-100';
+                li.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm mr-3">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-sm text-indigo-900">${merchant}</p>
+                            <p class="text-[10px] uppercase tracking-widest text-gray-500">${category} • Extracted via AI</p>
+                        </div>
+                    </div>
+                    <span class="font-mono font-bold text-sm">$${amount}.00</span>
+                `;
+                list.insertBefore(li, list.firstChild);
+
+                // Update total
+                totalCost += amount;
+                document.getElementById('total-cost').innerText = totalCost.toLocaleString();
+                
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
